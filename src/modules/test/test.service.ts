@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable } from '@nestjs/common';
 import { PROVIDER_KEY, TestModuleOptions } from "./test.module";
 
 @Injectable()
