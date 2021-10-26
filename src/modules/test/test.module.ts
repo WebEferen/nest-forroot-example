@@ -1,4 +1,5 @@
-import { DynamicModule, Module, ModuleMetadata, Provider } from '@nestjs/common';
+import { DynamicModule, Module, ModuleMetadata } from '@nestjs/common';
+import { WinstonModule, WinstonModuleOptions } from 'nest-winston';
 import { TestService } from './test.service';
 
 export interface TestModuleOptions {
@@ -7,27 +8,26 @@ export interface TestModuleOptions {
 }
 
 export interface TestModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
-  useFactory?: (...args: any[]) => Promise<TestModuleOptions> | TestModuleOptions;
+  useFactory?: (...args: any[]) => Promise<WinstonModuleOptions> | WinstonModuleOptions;
+  additionalOptions?: TestModuleOptions;
   inject?: any[];
 }
-
-export const PROVIDER_KEY = 'TEST_PROVIDER';
-
 @Module({imports: [], controllers: [], providers: [] })
 export class TestModule {
+
   static forRootAsync(options: TestModuleAsyncOptions): DynamicModule {
 
-    const provider: Provider = {
+    const winstonModule = WinstonModule.forRootAsync({
+      imports: options.imports || [],
       inject: options.inject || [],
-      provide: PROVIDER_KEY,
-      useFactory: options.useFactory,
-    }
+      useFactory: options.useFactory
+    });
 
     return {
       module: TestModule,
-      imports: options.imports,
-      providers: [provider, TestService],
-      exports: [provider, TestService]
-  };
+      imports: [winstonModule],
+      providers: [TestService],
+      exports: [TestService]
+    };
   }
 }

@@ -1,12 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { PROVIDER_KEY, TestModuleOptions } from "./test.module";
+import { Inject, Injectable, LoggerService } from '@nestjs/common';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 @Injectable()
 export class TestService {
-    constructor(@Inject(PROVIDER_KEY) private readonly options: TestModuleOptions) {}
+    constructor(@Inject(WINSTON_MODULE_NEST_PROVIDER) private readonly logger: LoggerService) {}
 
     getValues() {
-        return this.options;
+        this.logger.log('TEST LOG');
+
+        return { test: 'test' };
     }
 
 }

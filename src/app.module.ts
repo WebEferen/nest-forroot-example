@@ -8,7 +8,8 @@ import { TestModule } from './modules/test';
   imports: [TestModule.forRootAsync({
     imports: [ConfigModule],
     inject: [ConfigService],
-    useFactory: (configService: ConfigService) => ({ isDev: configService.config.a === 1, isMultiTenant: true })
+    // DO MAGIC IN CONFIGURATION HERE
+    useFactory: (configService: ConfigService) => ({ silent: configService.config.a !== 1 })
   })],
   controllers: [AppController],
 })
